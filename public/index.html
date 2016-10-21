@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Welcome to Firebase Hosting</title>
+    <link rel="manifest" href="/manifest.json">
+    <style media="screen">
+      body {
+        font-family: Roboto, Arial, sans-serif;
+        background: #ECEFF1;
+        color: rgba(0,0,0,0.87);
+      }
+
+      a {
+        color: rgb(3,155,229);
+      }
+
+      #message {
+        max-width: 400px;
+        margin: 40px auto;
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2),0 1px 1px 0 rgba(0,0,0,0.14),0 2px 1px -1px rgba(0,0,0,0.12);
+        border-radius: 2px;
+        background: white;
+        padding: 16px 24px;
+      }
+
+      #message h1 {
+        font-size: 22px;
+        font-weight: 500;
+        text-align: center;
+        margin: 0 0 16px;
+      }
+
+      #message p {
+        font-weight: 300;
+        line-height: 150%;
+        word-wrap: break-word;
+      }
+
+      #message ul {
+        list-style: none;
+        margin: 16px 0 0;
+        padding: 0;
+        text-align: center;
+      }
+
+      #message li a {
+        display: inline-block;
+        padding: 8px;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-weight: 500;
+        background: rgb(3,155,229);
+        color: white;
+        border: 1px solid rgb(3,155,229);
+        border-radius: 3px;
+        font-size: 14px;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message">
+      <h1>Welcome to Firebase Hosting</h1>
+      <p>
+      curl -x SOCKS5://127.0.0.1:1080 -XPOST -H 'Authorization: key=AIzaSyCzslTQwclhFNiEe6vBZN3QYE-ZaL-Lv2g' -H "Content-type: application/json" -d '{ "to": "<span id="token"></span>","notification": {"title":"AliExpress","body": "Happy Mid-Autumn Festival","click_action": "https://m.aliexpress.com","icon":"https://m.aliexpress.com/img/android-chrome-192x192.png"}}' 'https://fcm.googleapis.com/fcm/send'
+      </p>
+
+      <ul>
+        <li><a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a></li>
+      </ul>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/3.4.1/firebase-app.js"></script>
+    <script src="./lib/firebase-messaging.js"></script>
+
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyCzslTQwclhFNiEe6vBZN3QYE-ZaL-Lv2g",
+        authDomain: "aliexpress-web-push.firebaseapp.com",
+        databaseURL: "https://aliexpress-web-push.firebaseio.com",
+        storageBucket: "aliexpress-web-push.appspot.com",
+        messagingSenderId: "968602708301"
+      };
+      firebase.initializeApp(config);
+
+      var messaging = firebase.messaging();
+        messaging.requestPermission().then(function() {
+          messaging.getToken()
+            .then(function(currentToken) {
+              console.log(currentToken);
+              !!currentToken && (document.querySelector("#token").innerText = currentToken);
+            }).catch(function(err) {
+              console.log('err: ', err);
+            });
+        }).catch(function(error) {
+          console.log(':^(', error);
+        });
+        messaging.onMessage((payload) => console.dir(payload));
+    </script>
+  </body>
+</html>
