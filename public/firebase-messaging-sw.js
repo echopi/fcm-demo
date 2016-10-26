@@ -1,7 +1,19 @@
-const window = self;
+importScripts('https://www.gstatic.com/firebasejs/3.5.2/firebase-app.js');
 
-importScripts('https://www.gstatic.com/firebasejs/3.4.1/firebase-app.js');
-importScripts('./lib/firebase-messaging.js');
+// log notification click action
+// your notificationclick hanlder must before importScripts firebase-messaging.js
+self.addEventListener("notificationclick", function(event) {
+  var n = event.notification;
+  var data = n ? event.notification.data : {};
+  var FCM_MSG = data.FCM_MSG || {};
+  var click_action = FCM_MSG.notification && FCM_MSG.notification.click_action ? FCM_MSG.notification.click_action : "";
+  log({
+    type: "notificationclick",
+    t: n ? n.timestamp : +new Date,
+    ca: click_action
+  })
+});
+importScripts('https://www.gstatic.com/firebasejs/3.5.2/firebase-messaging.js');
 
 firebase.initializeApp({
   messagingSenderId: "968602708301"
@@ -21,3 +33,21 @@ messaging.setBackgroundMessageHandler(data => {
   return self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
+
+// log arrival of notification
+self.addEventListener("push", function(event) {
+  try {
+    var json = event.data.json() || {};
+    var notification = json.notification || {};
+    var click_action = notification.click_action || "";
+    log({
+      type: "push",
+      t: +new Date,
+      ca: click_action
+    })
+  } catch (e) {}
+});
+
+function log() {
+  // do someting
+}
