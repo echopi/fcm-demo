@@ -63,7 +63,7 @@
     <div id="message">
       <h1>Welcome to Firebase Hosting</h1>
       <p>
-      curl -x SOCKS5://127.0.0.1:1080 -XPOST -H 'Authorization: key=AIzaSyCzslTQwclhFNiEe6vBZN3QYE-ZaL-Lv2g' -H "Content-type: application/json" -d '{ "to": "<span id="token"></span>","notification": {"title":"AliExpress","body": "Happy Mid-Autumn Festival","click_action": "https://m.aliexpress.com","icon":"https://m.aliexpress.com/img/android-chrome-192x192.png"}}' 'https://fcm.googleapis.com/fcm/send'
+      curl -X POST -H 'Authorization: key=AIzaSyCzslTQwclhFNiEe6vBZN3QYE-ZaL-Lv2g' -H "Content-type: application/json" -d '{ "to": "<span id="token"></span>","notification": {"title":"AliExpress","body": "Happy Mid-Autumn Festival","click_action": "https://m.aliexpress.com","icon":"https://m.aliexpress.com/img/android-chrome-192x192.png"}}' 'https://fcm.googleapis.com/fcm/send'
       </p>
 
       <ul>
@@ -71,8 +71,8 @@
       </ul>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-messaging.js"></script>
 
     <script>
       // Initialize Firebase
@@ -80,24 +80,32 @@
         apiKey: "AIzaSyCzslTQwclhFNiEe6vBZN3QYE-ZaL-Lv2g",
         authDomain: "aliexpress-web-push.firebaseapp.com",
         databaseURL: "https://aliexpress-web-push.firebaseio.com",
+        projectId: "aliexpress-web-push",
         storageBucket: "aliexpress-web-push.appspot.com",
         messagingSenderId: "968602708301"
       };
       firebase.initializeApp(config);
 
       var messaging = firebase.messaging();
-        messaging.requestPermission().then(function() {
-          messaging.getToken()
-            .then(function(currentToken) {
-              console.log(currentToken);
-              !!currentToken && (document.querySelector("#token").innerText = currentToken);
-            }).catch(function(err) {
-              console.log('err: ', err);
-            });
-        }).catch(function(error) {
-          console.log(':^(', error);
+      messaging.requestPermission().then(function() {
+        messaging.getToken()
+          .then(function(currentToken) {
+            console.log(currentToken);
+            !!currentToken && (document.querySelector("#token").innerText = currentToken);
+          }).catch(function(err) {
+            console.log('err: ', err);
+          });
+      }).catch(function(error) {
+        console.log(':^(', error);
+      });
+      messaging.onMessage((payload) => console.dir(payload));
+      messaging.onTokenRefresh(function() {
+        messaging.getToken().then(function(refreshedToken) {
+          !!refreshedToken && (document.querySelector("#token").innerText = refreshedToken);
+        }).catch(function(err) {
+          console.log('Unable to retrieve refreshed token ', err);
         });
-        messaging.onMessage((payload) => console.dir(payload));
+      });
     </script>
   </body>
 </html>

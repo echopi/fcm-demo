@@ -1,4 +1,4 @@
-importScripts('https://www.gstatic.com/firebasejs/3.5.2/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/5.5.4/firebase-app.js');
 
 // log notification click action
 // your notificationclick hanlder must before importScripts firebase-messaging.js
@@ -13,7 +13,7 @@ self.addEventListener("notificationclick", function(event) {
     ca: click_action
   })
 });
-importScripts('https://www.gstatic.com/firebasejs/3.5.2/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/5.5.4/firebase-messaging.js');
 
 firebase.initializeApp({
   messagingSenderId: "968602708301"
