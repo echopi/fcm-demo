@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Welcome to Firebase Hosting</title>
+    <title>Welcome to Web Push</title>
     <link rel="manifest" href="/manifest.json">
     <style media="screen">
       body {
@@ -16,13 +16,20 @@
       }
 
       #message {
-        max-width: 400px;
-        margin: 40px auto;
+        /* max-width: 400px; */
+        margin: 40px 20px;
         box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2),0 1px 1px 0 rgba(0,0,0,0.14),0 2px 1px -1px rgba(0,0,0,0.12);
         border-radius: 2px;
         background: white;
         padding: 16px 24px;
       }
+      @media (min-width: 768) {
+        #message {
+          max-width: 400px;
+          margin: 40px auto;
+        }
+      }
+
 
       #message h1 {
         font-size: 22px;
@@ -43,6 +50,9 @@
         padding: 0;
         text-align: center;
       }
+      #message li {
+        margin-bottom: 12px;
+      }
 
       #message li a {
         display: inline-block;
@@ -62,11 +72,12 @@
   <body>
     <div id="message">
       <h1>Welcome to Firebase Hosting</h1>
-      <p>
+      <p id='content'>
       curl -X POST -H 'Authorization: key=AIzaSyCzslTQwclhFNiEe6vBZN3QYE-ZaL-Lv2g' -H "Content-type: application/json" -d '{ "to": "<span id="token"></span>","notification": {"title":"AliExpress","body": "Happy Mid-Autumn Festival","click_action": "https://m.aliexpress.com","icon":"https://m.aliexpress.com/img/android-chrome-192x192.png"}}' 'https://fcm.googleapis.com/fcm/send'
       </p>
 
       <ul>
+        <li><a href="#" class='js-copy' >Copy to clipbord</a></li>
         <li><a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a></li>
       </ul>
     </div>
@@ -106,6 +117,33 @@
           console.log('Unable to retrieve refreshed token ', err);
         });
       });
+
+      
+      var copyBtn = document.querySelector('.js-copy');
+      copyBtn.addEventListener('click', function(event) {
+        event.preventDefault(); 
+        var content = document.querySelector('#content').innerText;
+        fallbackCopyTextToClipboard(content);
+      });
+
+      function fallbackCopyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          var successful = document.execCommand('copy');
+          var msg = successful ? 'successful' : 'unsuccessful';
+          console.log('Fallback: Copying text command was ' + msg);
+        } catch (err) {
+          console.error('Fallback: Oops, unable to copy', err);
+        }
+
+        document.body.removeChild(textArea);
+        window.getSelection().removeAllRanges();  
+      }
     </script>
   </body>
 </html>
