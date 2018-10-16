@@ -71,7 +71,7 @@
   </head>
   <body>
     <div id="message">
-      <h1>Welcome to Firebase Hosting</h1>
+      <h1>Welcome to Web Push</h1>
       <p id='content'>
       curl -X POST -H 'Authorization: key=AIzaSyCzslTQwclhFNiEe6vBZN3QYE-ZaL-Lv2g' -H "Content-type: application/json" -d '{ "to": "<span id="token"></span>","notification": {"title":"AliExpress","body": "Happy Mid-Autumn Festival","click_action": "https://m.aliexpress.com","icon":"https://m.aliexpress.com/img/android-chrome-192x192.png"}}' 'https://fcm.googleapis.com/fcm/send'
       </p>
@@ -109,7 +109,22 @@
       }).catch(function(error) {
         console.log(':^(', error);
       });
-      messaging.onMessage((payload) => console.dir(payload));
+      messaging.onMessage((payload) => {
+        console.dir(payload);
+
+        if (payload && payload.notification){
+          messaging.getSWRegistration_().then(registration => {
+            const notification = payload.notification;
+            const notificationOptions = {
+              body: notification.body,
+              icon: 'https://m.aliexpress.com/img/android-chrome-192x192.png',
+              click_action: notification.click_action,
+            };
+            return registration.showNotification(notification.title,
+              notificationOptions);
+          });
+        }
+      });
       messaging.onTokenRefresh(function() {
         messaging.getToken().then(function(refreshedToken) {
           !!refreshedToken && (document.querySelector("#token").innerText = refreshedToken);
