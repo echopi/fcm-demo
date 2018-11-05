@@ -98,6 +98,8 @@
       firebase.initializeApp(config);
 
       var messaging = firebase.messaging();
+      messaging.usePublicVapidKey("BJqNPfT8qNP-MnJXOnmWfU_bpekum0dA0Wt0hQxJOVb0Eg1cFRK0WgoUk9m2EoSCga-jRC3i_Hd2Ck0ljPgdeGk");
+
       messaging.requestPermission().then(function() {
         messaging.getToken()
           .then(function(currentToken) {
